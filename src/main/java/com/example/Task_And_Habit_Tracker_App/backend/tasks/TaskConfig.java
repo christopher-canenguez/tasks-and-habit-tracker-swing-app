@@ -11,7 +11,7 @@ import java.util.List;
 public class TaskConfig {
 
     @Bean
-    CommandLineRunner commandLineRunner(TaskRepository taskRepository) {
+    CommandLineRunner taskCommandLineRunner(TaskRepository taskRepository) {
         return args -> {
             Task groceryTask = new Task(
                     "Groceries",
