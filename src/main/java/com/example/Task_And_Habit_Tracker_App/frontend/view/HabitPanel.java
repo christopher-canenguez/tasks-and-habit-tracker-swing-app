@@ -1,7 +1,6 @@
-package com.example.Task_And_Habit_Tracker_App.frontend;
+package com.example.Task_And_Habit_Tracker_App.frontend.view;
 
 import com.example.Task_And_Habit_Tracker_App.backend.habits.Frequency;
-import com.example.Task_And_Habit_Tracker_App.backend.tasks.Priority;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JButton;
@@ -11,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import java.time.LocalDate;
 
 public class HabitPanel extends JPanel {
 

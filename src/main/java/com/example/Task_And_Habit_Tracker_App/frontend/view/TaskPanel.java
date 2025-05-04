@@ -1,7 +1,8 @@
-package com.example.Task_And_Habit_Tracker_App.frontend;
+package com.example.Task_And_Habit_Tracker_App.frontend.view;
 
 import com.example.Task_And_Habit_Tracker_App.backend.tasks.Priority;
 import com.example.Task_And_Habit_Tracker_App.backend.tasks.Task;
+import com.example.Task_And_Habit_Tracker_App.frontend.controller.TaskController;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JButton;
@@ -9,32 +10,27 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.time.LocalDate;
+import java.util.List;
 
 public class TaskPanel extends JPanel {
 
+    private TaskController controller;
     private JTable taskTable;
     private JButton addButton;
     private JButton updateButton;
     private JButton deleteButton;
 
     public TaskPanel() {
-        super(new MigLayout("debug", "", ""));
+        super(new MigLayout("debug, alignx center", "", ""));
+        this.controller = new TaskController();
         initUi();
     }
 
     private void initUi() {
-        String[] columnNames = {
-                "Title",
-                "Description",
-                "Due Date",
-                "Priority",
-                "Completed"};
+        var taskList = controller.fetchTasks();
 
-        Object[][] exampleData = {
-                {"Groceries", "Go shopping for groceries.", LocalDate.now(), Priority.HIGH, true},
-                {"Groceries", "Go shopping for groceries.", LocalDate.now(), Priority.HIGH, false}
-        };
-        taskTable = new JTable(exampleData, columnNames);
+        var taskTableModel = new TaskTableModel(taskList);
+        taskTable = new JTable(taskTableModel);
 
         var buttonPanel = new JPanel(new MigLayout("fill, debug", "[]15[]15[]", "[]"));
         addButton = new JButton("Add");
