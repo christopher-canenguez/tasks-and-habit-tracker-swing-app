@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table // Creates table in database for this object.
-public class Habit {
+class Habit {
     @Id
     @SequenceGenerator(
             name = "habit_sequence",
@@ -30,10 +30,10 @@ public class Habit {
     private Frequency frequency;
     private int streak;
 
-    public Habit() {
+    Habit() {
     }
 
-    public Habit(Long id, String name, String description, Frequency frequency, int streak) {
+    Habit(Long id, String name, String description, Frequency frequency, int streak) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -41,7 +41,7 @@ public class Habit {
         this.streak = streak;
     }
 
-    public Habit(String name, String description, Frequency frequency, int streak) {
+    Habit(String name, String description, Frequency frequency, int streak) {
         this.name = name;
         this.description = description;
         this.frequency = frequency;

@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "api/v1/habit")
-public class HabitController {
+class HabitController {
     private final HabitService habitService;
 
     @Autowired

@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class HabitService {
+class HabitService {
     private final HabitRepository habitRepository;
 
     @Autowired

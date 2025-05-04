@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 @Configuration
-public class HabitConfig {
+class HabitConfig {
     @Bean
     CommandLineRunner habitCommandLineRunner(HabitRepository habitRepository) {
         return args -> {

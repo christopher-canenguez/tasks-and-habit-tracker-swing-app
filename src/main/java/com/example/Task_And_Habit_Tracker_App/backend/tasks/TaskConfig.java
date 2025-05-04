@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Configuration
-public class TaskConfig {
+class TaskConfig {
 
     @Bean
     CommandLineRunner taskCommandLineRunner(TaskRepository taskRepository) {

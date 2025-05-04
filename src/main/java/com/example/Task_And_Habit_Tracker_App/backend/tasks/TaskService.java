@@ -10,12 +10,12 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class TaskService {
+class TaskService {
 
     private final TaskRepository taskRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
