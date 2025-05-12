@@ -18,7 +18,7 @@ class TaskConfig {
                     "Go shopping for groceries for Christmas.",
                     LocalDate.now(),
                     Priority.HIGH,
-                    false
+                    true
             );
 
             Task trashTask = new Task(

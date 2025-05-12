@@ -54,8 +54,7 @@ public class TaskTableModel extends AbstractTableModel {
     public Class<?> getColumnClass(int columnIndex) {
         return switch (columnIndex) {
             case 0 -> Long.class;
-            case 1 -> String.class;
-            case 2 -> String.class;
+            case 1, 2 -> String.class;
             case 3 -> LocalDate.class;
             case 4 -> Priority.class;
             case 5 -> Boolean.class;
@@ -63,5 +62,16 @@ public class TaskTableModel extends AbstractTableModel {
         };
     }
 
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return column == 5; // Only checkbox column is editable
+    }
 
+    @Override
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if (columnIndex == 5) {
+            taskList.get(rowIndex).setCompleted((Boolean) aValue);
+            fireTableCellUpdated(rowIndex, columnIndex);
+        }
+    }
 }
