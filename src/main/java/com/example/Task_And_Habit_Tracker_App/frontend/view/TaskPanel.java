@@ -22,22 +22,25 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.util.Calendar;
 import java.util.Date;
 
 public class TaskPanel extends JPanel {
 
-    private TaskController controller;
+    private final TaskController controller;
     private JTable taskTable;
     private JButton addButton;
     private JButton updateButton;
     private JButton deleteButton;
+    private JButton unselectButton;
 
     public TaskPanel() {
-        super(new MigLayout("debug, alignx center", "", ""));
+        super(new MigLayout("alignx center", "", ""));
         this.controller = new TaskController();
         initUi();
         initButtonListeners();
+        initGridListeners();
     }
 
     private void initUi() {
@@ -45,16 +48,27 @@ public class TaskPanel extends JPanel {
 
         var taskTableModel = new TaskTableModel(taskList);
         taskTable = new JTable(taskTableModel);
+        taskTable.setPreferredScrollableViewportSize(new Dimension(800, 200));
+        taskTable.setFillsViewportHeight(true);
+        var tableColumnModel = taskTable.getColumnModel();
+        tableColumnModel.getColumn(0).setPreferredWidth(25);
+        tableColumnModel.getColumn(1).setPreferredWidth(100);
+        tableColumnModel.getColumn(2).setPreferredWidth(200);
+        tableColumnModel.getColumn(3).setPreferredWidth(100);
+        tableColumnModel.getColumn(4).setPreferredWidth(100);
+        tableColumnModel.getColumn(5).setPreferredWidth(100);
 
-        var buttonPanel = new JPanel(new MigLayout("fill, debug", "[]15[]15[]", "[]"));
+        var buttonPanel = new JPanel(new MigLayout("fill", "[]15[]15[]", "[]"));
         addButton = new JButton("Add");
         updateButton = new JButton("Update");
         updateButton.setEnabled(false);
         deleteButton = new JButton("Delete");
         deleteButton.setEnabled(false);
+        unselectButton = new JButton("Unselect");
         buttonPanel.add(addButton, "grow");
         buttonPanel.add(updateButton, "grow");
         buttonPanel.add(deleteButton, "grow");
+        buttonPanel.add(unselectButton, "grow");
 
         add(new JScrollPane(taskTable), "center");
         add(buttonPanel, "south");
@@ -62,6 +76,19 @@ public class TaskPanel extends JPanel {
 
     private void initButtonListeners() {
         addButton.addActionListener(e -> createAddTaskDialog());
+        unselectButton.addActionListener(e -> taskTable.clearSelection());
+    }
+
+    private void initGridListeners() {
+        taskTable.getSelectionModel().addListSelectionListener(e -> {
+            var isRowSelected = taskTable.getSelectedRow() != -1;
+            enableButtons(isRowSelected);
+        });
+    }
+
+    private void enableButtons(boolean enable) {
+        deleteButton.setEnabled(enable);
+        updateButton.setEnabled(enable);
     }
 
     private void createAddTaskDialog() {
@@ -107,7 +134,7 @@ public class TaskPanel extends JPanel {
 
         dialog.add(addTaskPanel, BorderLayout.CENTER);
         dialog.pack();
-        dialog.setLocationRelativeTo(null);
+        dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
 
