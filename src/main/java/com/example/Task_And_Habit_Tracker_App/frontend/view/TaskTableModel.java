@@ -5,6 +5,7 @@ import com.example.Task_And_Habit_Tracker_App.backend.tasks.Task;
 
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class TaskTableModel extends AbstractTableModel {
@@ -16,6 +17,7 @@ public class TaskTableModel extends AbstractTableModel {
             "Due Date",
             "Priority",
             "Completed"};
+    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     public TaskTableModel(List<Task> taskList) {
         this.taskList = taskList;
@@ -38,7 +40,7 @@ public class TaskTableModel extends AbstractTableModel {
             case 0 -> task.getId();
             case 1 -> task.getTitle();
             case 2 -> task.getDescription();
-            case 3 -> task.getDueDate();
+            case 3 -> task.getDueDate().format(dateFormatter);
             case 4 -> task.getPriority();
             case 5 -> task.isCompleted();
             default -> null;
@@ -73,5 +75,14 @@ public class TaskTableModel extends AbstractTableModel {
             taskList.get(rowIndex).setCompleted((Boolean) aValue);
             fireTableCellUpdated(rowIndex, columnIndex);
         }
+    }
+
+    public void removeTaskAt(int index) {
+        taskList.remove(index);
+        fireTableRowsUpdated(index, index);
+    }
+
+    public Task getSelectedTask(int index) {
+        return taskList.get(index);
     }
 }
