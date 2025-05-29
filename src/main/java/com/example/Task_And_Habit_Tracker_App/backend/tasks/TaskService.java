@@ -33,8 +33,8 @@ class TaskService {
         return taskOptional.get();
     }
 
-    void createNewTask(Task task) {
-        taskRepository.save(task);
+    Task createNewTask(Task task) {
+        return taskRepository.save(task);
     }
 
     void deleteTask(Long taskId) {

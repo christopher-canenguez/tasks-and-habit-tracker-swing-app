@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -22,7 +23,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.BorderLayout;
 import java.awt.Frame;
-import java.time.LocalDate;
+import java.io.IOException;
 import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
@@ -35,15 +36,19 @@ public class TaskDetailsDialog extends JDialog {
     JSpinner dateSpinner;
     JComboBox<Priority> priorityDropdown;
     TaskController taskController;
+    JButton submitTaskButton;
+    TaskPanel panel;
 
-    public TaskDetailsDialog(Task task) {
+    public TaskDetailsDialog(TaskPanel panel, Task task) {
         super((Frame) null, true);
         this.task = task;
         this.taskController = new TaskController();
+        this.panel = panel;
 
         setTitle(task == null ? "Create Task" : "Edit Task");
         setLayout(new BorderLayout());
         initUi();
+        initButtonListener();
         if (task != null) {
             fillFormWithTaskData(task);
         }
@@ -72,7 +77,7 @@ public class TaskDetailsDialog extends JDialog {
         dateSpinner.setEditor(editor);
 
         priorityDropdown = new JComboBox<>(Priority.values());
-        JButton submitTaskButton = new JButton("Submit");
+        submitTaskButton = new JButton("Submit");
 
         addTaskPanel.add(new JLabel("Title"), "wrap");
         addTaskPanel.add(titleField, "split 2");
@@ -88,6 +93,48 @@ public class TaskDetailsDialog extends JDialog {
 
         add(addTaskPanel, BorderLayout.CENTER);
         pack();
+    }
+
+    private void initButtonListener() {
+        submitTaskButton.addActionListener(e -> {
+            if (task == null) {
+                createNewTask();
+            } else {
+                updateExistingTask();
+            }
+        });
+    }
+
+    private void updateExistingTask() {
+        task = getTask();
+        try {
+            taskController.updateTask(task);
+            System.out.println("Task created: " + task.getId());
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void createNewTask() {
+        var taskToBeCreated = getTask();
+        try {
+            var newTask = taskController.createTask(taskToBeCreated);
+            if (wasTaskCreatedSuccessfully(newTask)) {
+                var model = (TaskTableModel) panel.getTaskTable().getModel();
+                model.addTask(newTask);
+                dispose();
+                System.out.println("Task created: " + newTask.getId()); // <-- use backend-generated ID
+
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to create task. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private static boolean wasTaskCreatedSuccessfully(Task newTask) {
+        return newTask != null && newTask.getId() != null;
     }
 
     private void fillFormWithTaskData(Task task) {
@@ -165,17 +212,23 @@ public class TaskDetailsDialog extends JDialog {
     }
 
     private Task getTask() {
+        var selectedDate = (Date) dateSpinner.getValue();
+        var localDate = selectedDate.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+
         if (task == null) {
             task = new Task(
+                    null,
                     titleField.getText(),
                     descriptionField.getText(),
-                    (LocalDate) dateSpinner.getValue(),
+                    localDate,
                     (Priority) priorityDropdown.getSelectedItem(),
                     false);
         } else {
             task.setTitle(titleField.getText());
             task.setDescription(descriptionField.getText());
-            task.setDueDate((LocalDate) dateSpinner.getValue());
+            task.setDueDate(localDate);
             task.setPriority((Priority) priorityDropdown.getSelectedItem());
         }
         return task;

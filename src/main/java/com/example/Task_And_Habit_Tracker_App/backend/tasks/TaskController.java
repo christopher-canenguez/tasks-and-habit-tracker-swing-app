@@ -1,6 +1,8 @@
 package com.example.Task_And_Habit_Tracker_App.backend.tasks;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,8 +38,8 @@ class TaskController {
     }
 
     @PostMapping
-    void registerNewTask(@RequestBody Task task) {
-        taskService.createNewTask(task);
+    Task registerNewTask(@RequestBody Task task) {
+        return taskService.createNewTask(task);
     }
 
     @DeleteMapping(path = "{taskId}")

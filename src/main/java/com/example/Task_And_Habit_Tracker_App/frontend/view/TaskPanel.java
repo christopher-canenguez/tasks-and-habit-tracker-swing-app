@@ -2,6 +2,7 @@ package com.example.Task_And_Habit_Tracker_App.frontend.view;
 
 import com.example.Task_And_Habit_Tracker_App.backend.tasks.Task;
 import com.example.Task_And_Habit_Tracker_App.frontend.controller.TaskController;
+import lombok.Getter;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JButton;
@@ -17,6 +18,7 @@ import java.util.List;
 public class TaskPanel extends JPanel {
 
     private final TaskController controller;
+    @Getter
     private JTable taskTable;
     private JButton addButton;
     private JButton updateButton;
@@ -72,7 +74,7 @@ public class TaskPanel extends JPanel {
     }
 
     private void addTask() {
-        var createDialog = new TaskDetailsDialog(null);
+        var createDialog = new TaskDetailsDialog(this, null);
         createDialog.setLocationRelativeTo(this);
         createDialog.setVisible(true);
     }
@@ -84,7 +86,7 @@ public class TaskPanel extends JPanel {
         }
 
         var selectedTask = taskList.get(selectedRow);
-        var updateDialog = new TaskDetailsDialog(selectedTask);
+        var updateDialog = new TaskDetailsDialog(this, selectedTask);
         updateDialog.setLocationRelativeTo(this);
         updateDialog.setVisible(true);
     }
