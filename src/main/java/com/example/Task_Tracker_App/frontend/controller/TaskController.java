@@ -1,6 +1,6 @@
-package com.example.Task_And_Habit_Tracker_App.frontend.controller;
+package com.example.Task_Tracker_App.frontend.controller;
 
-import com.example.Task_And_Habit_Tracker_App.backend.tasks.Task;
+import com.example.Task_Tracker_App.backend.Task;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

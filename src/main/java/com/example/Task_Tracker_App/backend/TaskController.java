@@ -1,4 +1,4 @@
-package com.example.Task_And_Habit_Tracker_App.backend.tasks;
+package com.example.Task_Tracker_App.backend;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

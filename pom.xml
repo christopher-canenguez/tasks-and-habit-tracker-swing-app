@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>Task-And-Habit-Tracker-App</artifactId>
+    <artifactId>Task-Tracker-App</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Task-And-Habit-Tracker-App</name>
-    <description>Task and Habit Tracker Java Swing project using SpringBoot</description>
+    <name>Task-Tracker-App</name>
+    <description>Task Tracker Java Swing project using SpringBoot</description>
     <url/>
     <licenses>
         <license/>

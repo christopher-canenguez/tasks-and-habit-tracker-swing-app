@@ -1,8 +1,8 @@
-package com.example.Task_And_Habit_Tracker_App.frontend.view;
+package com.example.Task_Tracker_App.frontend.view;
 
-import com.example.Task_And_Habit_Tracker_App.backend.tasks.Priority;
-import com.example.Task_And_Habit_Tracker_App.backend.tasks.Task;
-import com.example.Task_And_Habit_Tracker_App.frontend.controller.TaskController;
+import com.example.Task_Tracker_App.backend.Priority;
+import com.example.Task_Tracker_App.backend.Task;
+import com.example.Task_Tracker_App.frontend.controller.TaskController;
 
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
