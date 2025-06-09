@@ -37,18 +37,17 @@ public class TaskPanel extends JPanel {
     private void initUi() {
         taskList = controller.fetchTasks();
 
-        var taskTableModel = new TaskTableModel(taskList);
+        var taskTableModel = new TaskTableModel(taskList, controller);
         taskTable = new JTable(taskTableModel);
         taskTable.setPreferredScrollableViewportSize(new Dimension(800, 200));
         taskTable.setFillsViewportHeight(true);
         taskTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         var tableColumnModel = taskTable.getColumnModel();
-        tableColumnModel.getColumn(0).setPreferredWidth(25);
-        tableColumnModel.getColumn(1).setPreferredWidth(100);
-        tableColumnModel.getColumn(2).setPreferredWidth(200);
+        tableColumnModel.getColumn(0).setPreferredWidth(100);
+        tableColumnModel.getColumn(1).setPreferredWidth(200);
+        tableColumnModel.getColumn(2).setPreferredWidth(100);
         tableColumnModel.getColumn(3).setPreferredWidth(100);
         tableColumnModel.getColumn(4).setPreferredWidth(100);
-        tableColumnModel.getColumn(5).setPreferredWidth(100);
 
         var buttonPanel = new JPanel(new MigLayout("fill", "[]15[]15[]", "[]"));
         addButton = new JButton("Add");

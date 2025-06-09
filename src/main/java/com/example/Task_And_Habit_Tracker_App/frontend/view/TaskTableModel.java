@@ -2,25 +2,31 @@ package com.example.Task_And_Habit_Tracker_App.frontend.view;
 
 import com.example.Task_And_Habit_Tracker_App.backend.tasks.Priority;
 import com.example.Task_And_Habit_Tracker_App.backend.tasks.Task;
+import com.example.Task_And_Habit_Tracker_App.frontend.controller.TaskController;
 
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class TaskTableModel extends AbstractTableModel {
     private final List<Task> taskList;
     private final String[] columnNames = {
-            "Id",
             "Title",
             "Description",
             "Due Date",
             "Priority",
             "Completed"};
     private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+    private final TaskController controller;
 
-    public TaskTableModel(List<Task> taskList) {
+    public TaskTableModel(List<Task> taskList, TaskController controller) {
         this.taskList = taskList;
+        this.controller = controller;
     }
 
     @Override
@@ -37,12 +43,11 @@ public class TaskTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Task task = taskList.get(rowIndex);
         return switch (columnIndex) {
-            case 0 -> task.getId();
-            case 1 -> task.getTitle();
-            case 2 -> task.getDescription();
-            case 3 -> task.getDueDate().format(dateFormatter);
-            case 4 -> task.getPriority();
-            case 5 -> task.isCompleted();
+            case 0 -> task.getTitle();
+            case 1 -> task.getDescription();
+            case 2 -> task.getDueDate().format(dateFormatter);
+            case 3 -> task.getPriority();
+            case 4 -> task.isComplete();
             default -> null;
         };
     }
@@ -55,25 +60,54 @@ public class TaskTableModel extends AbstractTableModel {
     @Override
     public Class<?> getColumnClass(int columnIndex) {
         return switch (columnIndex) {
-            case 0 -> Long.class;
-            case 1, 2 -> String.class;
-            case 3 -> LocalDate.class;
-            case 4 -> Priority.class;
-            case 5 -> Boolean.class;
+            case 0, 1 -> String.class;
+            case 2 -> LocalDate.class;
+            case 3 -> Priority.class;
+            case 4 -> Boolean.class;
             default -> Object.class;
         };
     }
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return column == 5; // Only checkbox column is editable
+        return column == 4; // Only checkbox column is editable
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (columnIndex == 5) {
-            taskList.get(rowIndex).setCompleted((Boolean) aValue);
-            fireTableCellUpdated(rowIndex, columnIndex);
+        if (columnIndex != 4) {
+            return;
+        }
+
+        var task = taskList.get(rowIndex);
+        var newStatus = (Boolean) aValue;
+
+        if (task.isComplete() != newStatus) {
+            task.setComplete(newStatus); // Update the local task list.
+            fireTableCellUpdated(rowIndex, columnIndex); // Repaint UI.
+
+            new SwingWorker<Task, Void>() {
+                @Override
+                protected Task doInBackground() throws Exception {
+                    return controller.updateTask(task);
+                }
+
+                @Override
+                protected void done() {
+                    try {
+                        var updatedTask = get();
+                        if (updatedTask != null) {
+                            taskList.set(rowIndex, updatedTask);
+                            fireTableCellUpdated(rowIndex, columnIndex); // Repaint UI.
+                        } else {
+                            displayErrorDialog("Update failed, no response from server.");
+                        }
+                    } catch (ExecutionException | InterruptedException e) {
+                        e.printStackTrace();
+                        displayErrorDialog("Failed to update task: " + e.getMessage());
+                    }
+                }
+            }.execute();
         }
     }
 
@@ -89,5 +123,22 @@ public class TaskTableModel extends AbstractTableModel {
 
     public Task getSelectedTask(int index) {
         return taskList.get(index);
+    }
+
+    public void updateTask(Task updatedTask) {
+        for (int i = 0; i < taskList.size(); i++) {
+            var currentTask = taskList.get(i);
+            if (currentTask.getId().equals(updatedTask.getId())) {
+                taskList.set(i, updatedTask);
+                fireTableRowsUpdated(i, i);
+                return;
+            }
+        }
+    }
+
+    private void displayErrorDialog(String errorString) {
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(null, errorString, "Error", JOptionPane.ERROR_MESSAGE);
+        });
     }
 }

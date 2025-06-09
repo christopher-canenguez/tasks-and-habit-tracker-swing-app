@@ -48,32 +48,34 @@ class TaskService {
     }
 
     @Transactional
-    void updateTask(Long taskId, String title, String description, LocalDate dueDate, Priority priority, boolean completed) {
-        Task task = taskRepository
+    Task updateTask(Long taskId, Task updatedTask) {
+        Task existingTask = taskRepository
                 .findById(taskId)
                 .orElseThrow(() -> new IllegalStateException(
                         "Task with id " + taskId + " doesn't exist."
                 ));
 
-        if (isTitleValid(title, task)) {
-            task.setTitle(title);
+        if (isTitleValid(updatedTask.getTitle(), existingTask)) {
+            existingTask.setTitle(updatedTask.getTitle());
         }
 
-        if (isDescriptionValid(description, task)) {
-            task.setDescription(description);
+        if (isDescriptionValid(updatedTask.getDescription(), existingTask)) {
+            existingTask.setDescription(updatedTask.getDescription());
         }
 
-        if (isDueDateValid(dueDate, task)) {
-            task.setDueDate(dueDate);
+        if (isDueDateValid(updatedTask.getDueDate(), existingTask)) {
+            existingTask.setDueDate(updatedTask.getDueDate());
         }
 
-        if (isPriorityValid(priority, task)) {
-            task.setPriority(priority);
+        if (isPriorityValid(updatedTask.getPriority(), existingTask)) {
+            existingTask.setPriority(updatedTask.getPriority());
         }
 
-        if (isCompletionStatusValid(completed, task)) {
-            task.setCompleted(completed);
+        if (isCompletionStatusValid(updatedTask.isComplete(), existingTask)) {
+            existingTask.setComplete(updatedTask.isComplete());
         }
+
+        return taskRepository.save(existingTask);
     }
 
     private boolean isTitleValid(String title, Task task) {
@@ -93,7 +95,7 @@ class TaskService {
     }
 
     private boolean isCompletionStatusValid(boolean completed, Task task) {
-        return !Objects.equals(task.isCompleted(), completed);
+        return !Objects.equals(task.isComplete(), completed);
     }
 
 }

@@ -35,26 +35,26 @@ public class Task {
     private LocalDate dueDate;
     @Enumerated(EnumType.STRING)
     private Priority priority;
-    private boolean completed;
+    private boolean complete;
 
     public Task() {
     }
 
-    public Task(Long id, String title, String description, LocalDate dueDate, Priority priority, boolean completed) {
+    public Task(Long id, String title, String description, LocalDate dueDate, Priority priority, boolean complete) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.completed = completed;
+        this.complete = complete;
     }
 
-    public Task(String title, String description, LocalDate dueDate, Priority priority, boolean completed) {
+    public Task(String title, String description, LocalDate dueDate, Priority priority, boolean complete) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.completed = completed;
+        this.complete = complete;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class Task {
                 "  - Description = '" + description + '\'' +
                 "  - Due Date = " + dueDate +
                 "  - Priority = " + priority +
-                "  - Completed = " + completed;
+                "  - Completed = " + complete;
     }
 }
 

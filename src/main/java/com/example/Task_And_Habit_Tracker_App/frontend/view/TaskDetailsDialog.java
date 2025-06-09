@@ -108,10 +108,23 @@ public class TaskDetailsDialog extends JDialog {
     private void updateExistingTask() {
         task = getTask();
         try {
-            taskController.updateTask(task);
-            System.out.println("Task created: " + task.getId());
+            Task updatedTask = taskController.updateTask(task);
+
+            if (updatedTask != null && updatedTask.getId() != null) {
+                System.out.println("Task updated: " + updatedTask.getId());
+
+                var model = (TaskTableModel) panel.getTaskTable().getModel();
+                model.updateTask(updatedTask);
+
+                // Dispose the dialog
+                dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Failed to update task. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
         } catch (IOException ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An error occurred: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

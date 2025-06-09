@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -28,32 +26,32 @@ class TaskController {
     }
 
     @GetMapping()
-    List<Task> getTasks() {
-        return taskService.getTasks();
+    ResponseEntity<List<Task>> getTasks() {
+        List<Task> tasks = taskService.getTasks();
+        return ResponseEntity.ok(tasks);
     }
 
     @GetMapping(path = "{taskId}")
-    Task getTaskById(@PathVariable("taskId") Long taskId) {
-        return taskService.getTaskById(taskId);
+    ResponseEntity<Task> getTaskById(@PathVariable("taskId") Long taskId) {
+        Task task = taskService.getTaskById(taskId);
+        return ResponseEntity.ok(task);
     }
 
     @PostMapping
-    Task registerNewTask(@RequestBody Task task) {
-        return taskService.createNewTask(task);
+    ResponseEntity<Task> registerNewTask(@RequestBody Task task) {
+        Task createdTask = taskService.createNewTask(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdTask);
     }
 
     @DeleteMapping(path = "{taskId}")
-    void deleteTask(@PathVariable("taskId") Long taskId) {
+    ResponseEntity<Void> deleteTask(@PathVariable("taskId") Long taskId) {
         taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build(); // 204 - No content.
     }
 
     @PutMapping(path = "{taskId}")
-    void updateTask(@PathVariable("taskId") Long taskId,
-                    @RequestParam(required = false) String title,
-                    @RequestParam(required = false) String description,
-                    @RequestParam(required = false) LocalDate date,
-                    @RequestParam(required = false) Priority priority,
-                    @RequestParam(required = false) boolean completed) {
-        taskService.updateTask(taskId, title, description, date, priority, completed);
+    ResponseEntity<Task> updateTask(@PathVariable("taskId") Long taskId, @RequestBody Task updatedTask) {
+        Task savedTask = taskService.updateTask(taskId, updatedTask);
+        return ResponseEntity.ok(savedTask); // 200 - OK.
     }
 }
