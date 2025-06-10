@@ -1,4 +1,5 @@
-🚀 Features
+# 🚀 Features
+
 ✅ Create, Read, Update, Delete (CRUD) operations for tasks
 
 📅 Deadline and Priority assignment per task
@@ -13,7 +14,7 @@
 
 🔗 Integrated with Jackson for JSON serialization/deserialization
 
-🛠️ Tech Stack
+# 🛠️ Tech Stack
 | Layer         | Tech Used           |
 | ------------- | ------------------- |
 | Frontend      | Java Swing          |
@@ -22,7 +23,7 @@
 | JSON Binding  | Jackson             |
 | Build Tool    | Maven               |
 
-🔧 API Endpoints
+# 🔧 API Endpoints
 | Method | Endpoint            | Description          |
 | ------ | ------------------- | -------------------- |
 | GET    | `/api/v1/task`      | Fetch all tasks      |
@@ -31,5 +32,5 @@
 | PUT    | `/api/v1/task/{id}` | Update existing task |
 | DELETE | `/api/v1/task/{id}` | Delete task by ID    |
 
-🧑‍💻 Author
-Created by Christopher Canenguez.
+# 🧑‍💻 Author
+Created by Christopher Canenguez - Software Engineer.
